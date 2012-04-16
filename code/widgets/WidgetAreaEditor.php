@@ -28,16 +28,21 @@ class WidgetAreaEditor extends FormField {
 	
 	function AvailableWidgets() {
 		
-		$widgets= new ArrayList();
+		$widgets= new DataObjectSet();
 		
-		foreach($this->widgetClasses as $widgetClass) {
-			$classes = ClassInfo::subclassesFor($widgetClass);
-			array_shift($classes);
-			foreach($classes as $class) {
+		foreach ($this->widgetClasses as $widgetClass) {
+			// get all available widgets, but only if no specific list of Widget Classes to use was given;
+			if (count($this->widgetClasses) == 1 && $this->widgetClasses[0] == 'Widget') {
+				$classes = ClassInfo::subclassesFor($widgetClass);
+				array_shift($classes);
+			} else {
+				$classes = $this->widgetClasses;
+			}
+			foreach ($classes as $class) {
 				$widgets->push(singleton($class));
 			}
 		}
-		
+
 		return $widgets;
 	}
 	
